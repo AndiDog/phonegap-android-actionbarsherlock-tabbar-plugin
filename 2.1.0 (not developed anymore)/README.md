@@ -28,6 +28,7 @@ Setup
   - They must have the same Android support library JAR file, if any (same file checksum)
   - You may have to change the compiler settings to use Java 1.6 (right-click project, Properties > Java Compiler)
 - Copy `ActionBarSherlockTabBar.js` from `assets/www` to the appropriate location in your project (e.g. `assets/www`)
+  and include it in your HTML file after the Cordova script
 - Copy the `src` folder to your project
 - Refresh your Android project (click on project name and press F5)
 
