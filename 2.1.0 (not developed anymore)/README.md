@@ -1,7 +1,7 @@
 Tab bar for Cordova on Android
 ==============================
 
-![Example screenshot](https://raw.github.com/AndiDog/phonegap-plugins/master/Android/ActionBarSherlockTabBar/Example screenshot.png)
+![Example screenshot](https://raw.github.com/AndiDog/phonegap-android-actionbarsherlock-tabbar-plugin/master/2.1.0%20(not%20developed%20anymore)/Example%20screenshot.png)
 
 License
 -------
