@@ -1,0 +1,1 @@
+See README file in appropriate folder. The folder names denote compatibility with Cordova versions.
