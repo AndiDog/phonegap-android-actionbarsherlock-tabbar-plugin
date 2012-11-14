@@ -109,7 +109,7 @@ public class ActionBarSherlockTabBarPlugin extends CordovaPlugin implements Acti
 
             if(args.length() != 0)
                 throw new AssertionError("setTabSelectedListener takes no arguments");
-            
+
             this.callback = callbackContext;
 
             return true;
@@ -210,8 +210,11 @@ public class ActionBarSherlockTabBarPlugin extends CordovaPlugin implements Acti
 
     public void triggerTabSelectedEvent(String tabTag)
     {
-        PluginResult res = new PluginResult(PluginResult.Status.OK, tabTag);
-        res.setKeepCallback(true);
-        callback.sendPluginResult(res);
+        if(callback != null)
+        {
+            PluginResult res = new PluginResult(PluginResult.Status.OK, tabTag);
+            res.setKeepCallback(true);
+            callback.sendPluginResult(res);
+        }
     }
 }
