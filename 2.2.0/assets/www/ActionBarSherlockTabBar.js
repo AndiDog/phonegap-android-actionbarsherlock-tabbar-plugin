@@ -26,6 +26,14 @@ cordova.define('cordova/plugin/actionBarSherlockTabBar', function(require, expor
              [])
     }
 
+    ActionBarSherlockTabBar.prototype.selectItem = function(tabTag) {
+        exec(null,
+             null,
+             'ActionBarSherlockTabBar',
+             'selectItem',
+             [tabTag])
+    }
+
     ActionBarSherlockTabBar.prototype.setTabSelectedListener = function(callback) {
         if(typeof callback != 'function')
             throw 'ActionBarSherlockTabBar.setTabSelectedListener: Callback not a function'

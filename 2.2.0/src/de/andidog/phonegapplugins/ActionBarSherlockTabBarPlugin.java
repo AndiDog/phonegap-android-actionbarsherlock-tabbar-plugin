@@ -101,7 +101,7 @@ public class ActionBarSherlockTabBarPlugin extends CordovaPlugin implements Acti
     }
 
     @Override
-    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException
+    public boolean execute(String action, final JSONArray args, CallbackContext callbackContext) throws JSONException
     {
         if(action.equals("setTabSelectedListener"))
         {
@@ -136,6 +136,45 @@ public class ActionBarSherlockTabBarPlugin extends CordovaPlugin implements Acti
                     actionBar.show();
                 }
             });
+            return true;
+        }
+        else if(action.equals("selectItem"))
+        {
+            if(args.length() != 1)
+                throw new AssertionError("selectItem takes tab tag as only argument");
+
+            final ActionBar actionBar = sherlock.getActionBar();
+            cordova.getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run()
+                {
+                    int count = actionBar.getTabCount();
+                    boolean found = false;
+
+                    try
+                    {
+                        for(int i = 0; i < count; ++i)
+                        {
+                            Tab t = actionBar.getTabAt(i);
+                            if(t.getTag().equals(args.get(0)))
+                            {
+                                actionBar.selectTab(t);
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if(!found)
+                            Log.e(TAG, "Tab '" + args.get(0) + "' not found");
+                    }
+                    catch(JSONException e)
+                    {
+                        // Can't happen
+                        Log.e(TAG, "", e);
+                    }
+                }
+            });
+
             return true;
         }
         else if(action.equals("_init"))
