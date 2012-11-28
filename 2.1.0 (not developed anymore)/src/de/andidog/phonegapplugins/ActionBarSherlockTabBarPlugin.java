@@ -1,7 +1,7 @@
 /*
     MIT licensed (http://www.opensource.org/licenses/mit-license.html)
 
-    See https://github.com/AndiDog/phonegap-plugins
+    See https://github.com/AndiDog/phonegap-android-actionbarsherlock-tabbar-plugin
 */
 package de.andidog.phonegapplugins;
 
