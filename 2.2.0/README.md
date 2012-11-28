@@ -130,4 +130,11 @@ Use the plugin like so:
         }
     </script>
 
-See also the example project in the repository (note: you have to download and reference ActionBarSherlock yourself).
+See also the example project in the repository. To try it, you have to download and reference ActionBarSherlock
+yourself:
+
+- Download [ActionBarSherlock](http://actionbarsherlock.com/download.html)
+- In the directory above `Example project`, extract ActionBarSherlock so that you get a folder hierarchy `dependencies > android > ActionBarSherlock > library`
+- Start Eclipse and open the example project – it should show a green tick for the referenced library project
+  - Not working? Make sure there's a `.project` file in said `library` folder (if not, create an Android project with Eclipse from the existing source)
+- Run!

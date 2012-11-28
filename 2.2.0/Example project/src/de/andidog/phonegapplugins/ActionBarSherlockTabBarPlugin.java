@@ -1,8 +1,15 @@
+/*
+    MIT licensed (http://www.opensource.org/licenses/mit-license.html)
+
+    See https://github.com/AndiDog/phonegap-android-actionbarsherlock-tabbar-plugin
+*/
 package de.andidog.phonegapplugins;
 
-import org.apache.cordova.api.Plugin;
+import org.apache.cordova.api.CallbackContext;
+import org.apache.cordova.api.CordovaPlugin;
 import org.apache.cordova.api.PluginResult;
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -15,7 +22,7 @@ import com.actionbarsherlock.app.ActionBar.Tab;
  * Acts like a bridge between the ActionBarSherlock tab bar implementation and the WebView. The code in the WebView can
  * install a callback function that is called when the tab selection changes.
  */
-public class ActionBarSherlockTabBarPlugin extends Plugin implements ActionBar.TabListener
+public class ActionBarSherlockTabBarPlugin extends CordovaPlugin implements ActionBar.TabListener
 {
     public interface OnInitListener
     {
@@ -24,7 +31,7 @@ public class ActionBarSherlockTabBarPlugin extends Plugin implements ActionBar.T
 
     private static final String TAG = "ActionBarSherlockTabBarPlugin";
 
-    public String callback;
+    public CallbackContext callback;
     private static OnInitListener onInitListener;
 
     // https://issues.apache.org/jira/browse/CB-1062
@@ -93,18 +100,82 @@ public class ActionBarSherlockTabBarPlugin extends Plugin implements ActionBar.T
         actionBar.addTab(tab);
     }
 
-    public PluginResult execute(String action, JSONArray args, String callbackId)
+    @Override
+    public boolean execute(String action, final JSONArray args, CallbackContext callbackContext) throws JSONException
     {
         if(action.equals("setTabSelectedListener"))
         {
-            this.callback = callbackId;
+            this.callback = null;
 
             if(args.length() != 0)
                 throw new AssertionError("setTabSelectedListener takes no arguments");
 
-            PluginResult res = new PluginResult(PluginResult.Status.NO_RESULT);
-            res.setKeepCallback(true);
-            return res;
+            this.callback = callbackContext;
+
+            return true;
+        }
+        else if(action.equals("hide"))
+        {
+            final ActionBar actionBar = sherlock.getActionBar();
+            cordova.getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run()
+                {
+                    actionBar.hide();
+                }
+            });
+            return true;
+        }
+        else if(action.equals("show"))
+        {
+            final ActionBar actionBar = sherlock.getActionBar();
+            cordova.getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run()
+                {
+                    actionBar.show();
+                }
+            });
+            return true;
+        }
+        else if(action.equals("selectItem"))
+        {
+            if(args.length() != 1)
+                throw new AssertionError("selectItem takes tab tag as only argument");
+
+            final ActionBar actionBar = sherlock.getActionBar();
+            cordova.getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run()
+                {
+                    int count = actionBar.getTabCount();
+                    boolean found = false;
+
+                    try
+                    {
+                        for(int i = 0; i < count; ++i)
+                        {
+                            Tab t = actionBar.getTabAt(i);
+                            if(t.getTag().equals(args.get(0)))
+                            {
+                                actionBar.selectTab(t);
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if(!found)
+                            Log.e(TAG, "Tab '" + args.get(0) + "' not found");
+                    }
+                    catch(JSONException e)
+                    {
+                        // Can't happen
+                        Log.e(TAG, "", e);
+                    }
+                }
+            });
+
+            return true;
         }
         else if(action.equals("_init"))
         {
@@ -115,12 +186,12 @@ public class ActionBarSherlockTabBarPlugin extends Plugin implements ActionBar.T
                 onInitListener = null;
             }
 
-            return new PluginResult(PluginResult.Status.NO_RESULT);
+            return true;
         }
         else
         {
             Log.e(TAG, "Invalid call: " + action);
-            return new PluginResult(PluginResult.Status.INVALID_ACTION);
+            return false;
         }
     }
 
@@ -178,8 +249,11 @@ public class ActionBarSherlockTabBarPlugin extends Plugin implements ActionBar.T
 
     public void triggerTabSelectedEvent(String tabTag)
     {
-        PluginResult res = new PluginResult(PluginResult.Status.OK, tabTag);
-        res.setKeepCallback(true);
-        this.success(res, callback);
+        if(callback != null)
+        {
+            PluginResult res = new PluginResult(PluginResult.Status.OK, tabTag);
+            res.setKeepCallback(true);
+            callback.sendPluginResult(res);
+        }
     }
 }
