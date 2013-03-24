@@ -222,8 +222,9 @@ public class ActionBarSherlockTabBarPlugin extends CordovaPlugin implements Acti
      */
     public void setSherlock(ActionBarSherlock sherlock)
     {
+        // This will happen after pause, for instance
         if(this.sherlock != null && this.sherlock != sherlock)
-            throw new IllegalStateException("May only set ActionBarSherlock instance of tab bar once");
+            Log.i(TAG, "setSherlock called twice, binding to new instance");
 
         this.sherlock = sherlock;
 
