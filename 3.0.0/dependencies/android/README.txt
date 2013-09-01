@@ -1,0 +1,1 @@
+ActionBarSherlock dependency not part of this repository. Please download it from http://actionbarsherlock.com/ and put it here so that the directory "dependencies/android/ActionBarSherlock/library" exists. Then open the "example_project" in Eclipse and check if the Android library project reference has a green tick.

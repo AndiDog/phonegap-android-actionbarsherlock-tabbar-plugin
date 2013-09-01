@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="PhoneGapAndroidTest" default="help">
+    <target name="copy-www">
+        <!-- "By default, files are only copied if the source file is newer than the destination file" -->
+        <copy todir="assets/www">
+            <fileset dir="../../www"/>
+        </copy>
+    </target>
+</project>
